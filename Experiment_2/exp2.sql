@@ -1,0 +1,77 @@
+-- MEDIUM LEVEL QUESTION
+CREATE TABLE Employee (
+    EmpID INT PRIMARY KEY,
+    EmpName VARCHAR(50) NOT NULL,
+    Department VARCHAR(50) NOT NULL,
+    ManagerID INT NULL  -- Self-reference to EmpID
+);
+
+
+ALTER TABLE Employee
+ADD CONSTRAINT FK_Manager FOREIGN KEY (ManagerID) REFERENCES Employee(EmpID);
+
+
+-- Insert data into Employee table
+INSERT INTO Employee (EmpID, EmpName, Department, ManagerID)
+VALUES
+(1, 'Alice', 'HR', NULL),        -- Top-level manager
+(2, 'Bob', 'Finance', 1),
+(3, 'Charlie', 'IT', 1),
+(4, 'David', 'Finance', 2),
+(5, 'Eve', 'IT', 3),
+(6, 'Frank', 'HR', 1);
+
+
+SELECT E1.EmpName AS [EMPLOYEEE_NAME], E2.EmpName AS [MANAGER_NAME], E1.Department AS [EMP_DEPT], E2.Department AS [MANAGER_DEPT]
+FROM EMPLOYEE AS E1
+INNER JOIN 
+EMPLOYEE AS E2
+ON
+E1.ManagerID = E2.EmpID;
+
+-- HARD LEVEL QUESTION
+
+CREATE TABLE YEARS_TBL(
+ ID INT,
+ YEAR INT,
+ NPV INT
+);
+
+CREATE TABLE QUERIES_TBL(
+ID INT,
+YEAR INT
+);
+
+INSERT INTO YEARS_TBL(ID, YEAR, NPV) 
+VALUES
+(1,2018,100),
+(7,2020,30),
+(13,2019,40),
+(1,2019,113),
+(2,2008,121),
+(3,2002,12),
+(11,2020,99),
+(7,2019,0);
+
+
+INSERT INTO QUERIES_TBL(ID, YEAR) 
+VALUES
+(1,2019),
+(2,2008),
+(3,2009),
+(7,2018),
+(7,2019),
+(7,2020),
+(13,2019);
+
+SELECT Q.*,ISNULL(Y.NPV,0) AS [NPV]
+FROM
+YEARS_TBL AS Y
+RIGHT OUTER JOIN
+QUERIES_TBL AS Q
+ON 
+Y.ID = Q.ID 
+AND
+Y.YEAR = Q.YEAR
+
+
